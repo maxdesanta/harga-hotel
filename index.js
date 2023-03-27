@@ -72,17 +72,52 @@ const rl = readline.createInterface({
   output: process.stdout,
 });
 
-rl.question("Masukkan tipe kamar (input dalam bentuk angka) : ", (tipeKamar) => {
-  rl.question("Masukkan lama menginap (dalam hari) : ", (lamaMenginap) => {
-    const convert = tipeKamarMapping[tipeKamar];
-    const hargaTipeKamar = hargaHotel[tipeKamar];
-    const hargaMalam = hargaTipeKamar.find((data) => lamaMenginap <= data.hari);
-    const totalHarga = hargaMalam.harga * lamaMenginap;
+function starts() {
+  rl.question(
+    "Masukkan tipe kamar (input dalam bentuk angka) : ",
+    (tipeKamar) => {
+      if (tipeKamar in tipeKamarMapping) {
+        rl.question(
+          "Masukkan lama menginap (dalam hari) : ",
+          (lamaMenginap) => {
+            const convert = tipeKamarMapping[tipeKamar];
+            const hargaTipeKamar = hargaHotel[tipeKamar];
+            const hargaMalam = hargaTipeKamar.find(
+              (data) => lamaMenginap <= data.hari
+            );
+            const totalHarga = hargaMalam.harga * lamaMenginap;
 
-    console.log(`Tipe Kamar: ${convert}`);
-    console.log(`Lama Menginap: ${lamaMenginap} hari`);
-    console.log(`Total Harga: Rp ${totalHarga}`);
+            console.log(`Tipe Kamar: ${convert}`);
+            console.log(`Lama Menginap: ${lamaMenginap} hari`);
+            console.log(`Total Harga: Rp ${totalHarga}`);
 
-    rl.close();
-  });
-});
+            // askAgain();
+            rl.question("Apakah ada mau pesan lagi ? (y/n)", (answer) => {
+              if (answer === "y") {
+                starts();
+              } else {
+                console.log("terima kasih");
+                rl.close();
+              }
+            });
+          }
+        );
+      } else {
+        console.log("pilihan kamar tidak tersedia");
+        starts();
+      }
+    }
+  );
+}
+
+// function askAgain() {
+//   rl.question("Apakah ada mau pesan lagi ? (y/n)", (answer) => {
+//     if (answer === "y") {
+//       starts();
+//     } else {
+//       console.log("terima kasih");
+//       rl.close();
+//     }
+//   });
+// }
+starts();
